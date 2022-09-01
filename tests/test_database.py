@@ -6,7 +6,7 @@ from src.schemas import QueryUser, ResponseUser
 from src.database import db
 
 
-TEST_DATA = [
+TEST_ALL_DATA = [
     {
         "name": "Derek Cole",
         "email": "nec.metus@VivamusnisiMauris.co.uk",
@@ -69,11 +69,32 @@ TEST_DATA = [
     }
 ]
 
+TEST_FILTER_DATA = [
+    {
+        "name": "Derek Cole",
+        "email": "nec.metus@VivamusnisiMauris.co.uk",
+        "age": 46,
+        "company": "Google",
+        "join_date": "2012-03-20T09:18:26-07:00",
+        "job_title": "director",
+        "gender": "male",
+        "salary": 1101
+    }
+]
+
 
 class TestDatabase(unittest.TestCase):
     @patch("src.database.db.collection.find")
     def test_get_all_data(self, find: Mock):
-        find.return_value = TEST_DATA
+        find.return_value = TEST_ALL_DATA
         result = db.get_all_data()
+        assert isinstance(result, list)
+        assert isinstance(result[0], ResponseUser)
+
+    @patch("src.database.db.collection.find")
+    def test_get_filter(self, find: Mock):
+        find.return_value = TEST_FILTER_DATA
+        query = QueryUser(gender="male", company="Google", ageStart=45, ageEnd=47, salaryEnd=1200)
+        result = db.get_filter(query=query)
         assert isinstance(result, list)
         assert isinstance(result[0], ResponseUser)
