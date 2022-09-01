@@ -1,9 +1,9 @@
+from datetime import datetime, timedelta
 import unittest
 from unittest.mock import Mock, patch
 
-
 from src.schemas import QueryUser, ResponseUser
-from src.database import db
+from src.database import db, Filter
 
 
 TEST_ALL_DATA = [
@@ -81,6 +81,26 @@ TEST_FILTER_DATA = [
         "salary": 1101
     }
 ]
+
+
+class TestFilter(unittest.TestCase):
+    def test_filter_integer(self):
+        data = [("age", 1, 2), ("salary", 100, 2000)]
+        for name, start, end in data:
+            result = Filter.filter_integer(name, start=start, end=end)
+            assert isinstance(result, dict)
+            assert result == {name: {"$gt": start - 1, "$lt": end + 1}}
+
+    def test_filter_datetime(self):
+        data = [
+            ("join_date", datetime.now() - timedelta(days=12), datetime.now()),
+            ("join_date", datetime.now() - timedelta(days=1), datetime.now())
+        ]
+        sec = timedelta(microseconds=1)
+        for name, start, end in data:
+            result = Filter.filter_datetime(name, start=start, end=end)
+            assert isinstance(result, dict)
+            assert result == {name: {"$gt": (start - sec).isoformat(), "$lt": (end + sec).isoformat()}}
 
 
 class TestDatabase(unittest.TestCase):

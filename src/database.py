@@ -115,5 +115,5 @@ def inserter():
 
 
 __all__ = [
-    "db", "inserter"
+    "db", "inserter", "Filter"
 ]
