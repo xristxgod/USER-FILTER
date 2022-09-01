@@ -19,14 +19,34 @@ def is_iso_8601(date: str) -> datetime:
 
 
 class QueryUser(BaseModel):
-    age: Optional[int] = Field(description="User age", default=None)
+    ageStart: Optional[int] = Field(default=None)
+    ageEnd: Optional[int] = Field(default=None)
     company: Optional[str] = Field(description="Company", default=None)
     gender: Optional[str] = Field(description="User gender", default=None)
     jobTitle: Optional[str] = Field(description="Job title", default=None)
     joinDateStart: Optional[str] = Field(default=None)      # ISO 8601
     joinDateEnd: Optional[str] = Field(default=None)        # ISO 8601
-    salaryStart: Optional[decimal.Decimal] = Field(default=None)
-    salaryEnd: Optional[decimal.Decimal] = Field(default=None)
+    salaryStart: Optional[int] = Field(default=None)
+    salaryEnd: Optional[int] = Field(default=None)
+
+    @validator("ageStart")
+    def valid_age_start(cls, age_start: int):
+        if age_start is None:
+            return None
+        return age_start
+
+    @validator("ageEnd")
+    def valid_age_end(cls, age_end: int, values: Dict):
+        if age_end is None and not values.get("ageStart"):
+            return None
+        elif age_end and not values.get("ageStart"):
+            return age_end
+        elif age_end is not None and values.get("ageStart") is not None and age_end < values.get("ageStart"):
+            raise HTTPException(
+                detail="The starting age must be less than the end!",
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+            )
+        return age_end
 
     @validator("gender")
     def valid_gender(cls, gender: str):
@@ -47,9 +67,7 @@ class QueryUser(BaseModel):
 
     @validator("joinDateEnd")
     def valid_join_date_end(cls, join_date_end: str, values: Dict):
-        if join_date_end is None and values.get("joinDateStart"):
-            return values["joinDateStart"]
-        elif join_date_end is None and not values.get("joinDateStart"):
+        if join_date_end is None and not values.get("joinDateStart"):
             return None
         elif join_date_end and not values.get("joinDateStart"):
             return is_iso_8601(join_date_end)
@@ -63,16 +81,14 @@ class QueryUser(BaseModel):
             return is_iso_8601(join_date_end)
 
     @validator("salaryStart")
-    def valid_salary_start(cls, salary_start: decimal.Decimal):
+    def valid_salary_start(cls, salary_start: int):
         if salary_start is None:
             return None
         return salary_start
 
     @validator("salaryEnd")
-    def valid_salary_end(cls, salary_end: decimal.Decimal, values: Dict):
-        if salary_end is None and values.get("salaryStart"):
-            return values.get("salaryStart")
-        elif salary_end is None and not values.get("salaryStart"):
+    def valid_salary_end(cls, salary_end: int, values: Dict):
+        if salary_end is None and not values.get("salaryStart"):
             return None
         elif salary_end and not values.get("salaryStart"):
             return salary_end
@@ -93,7 +109,7 @@ class ResponseUser(BaseModel):
     joinDate: datetime = Field(description="Date of employment", alias="join_date")
     jobTitle: str = Field(description="Job title", alias="job_title")
     gender: str = Field(description="User gender")
-    salary: decimal.Decimal = Field(description="Salary")
+    salary: int = Field(description="Salary")
 
     class Config:
         schema_extra = {
