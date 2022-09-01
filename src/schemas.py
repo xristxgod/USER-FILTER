@@ -8,9 +8,10 @@ from dateutil import parser
 from pydantic import BaseModel, Field, EmailStr, validator
 
 
-def is_iso_8601(date: str) -> datetime:
+def is_iso_8601(date: Optional[str] = None) -> Optional[datetime]:
+    """Check if a string is iso date!"""
     try:
-        return parser.parse(date)
+        return parser.parse(date) if date is not None else None
     except parser._parser.ParserError as error:
         raise HTTPException(
             detail="The date must be in the format: ISO 8601",
@@ -24,29 +25,23 @@ class QueryUser(BaseModel):
     company: Optional[str] = Field(description="Company", default=None)
     gender: Optional[str] = Field(description="User gender", default=None)
     jobTitle: Optional[str] = Field(description="Job title", default=None)
-    joinDateStart: Optional[str] = Field(default=None)      # ISO 8601
-    joinDateEnd: Optional[str] = Field(default=None)        # ISO 8601
+    joinDateStart: Optional[str] = Field(default=None)                      # ISO 8601
+    joinDateEnd: Optional[str] = Field(default=None)                        # ISO 8601
     salaryStart: Optional[int] = Field(default=None)
     salaryEnd: Optional[int] = Field(default=None)
 
-    @validator("ageStart")
-    def valid_age_start(cls, age_start: int):
-        if age_start is None:
-            return None
-        return age_start
-
     @validator("ageEnd")
-    def valid_age_end(cls, age_end: int, values: Dict):
-        if age_end is None and not values.get("ageStart"):
+    def valid_age_end(cls, age: int, values: Dict):
+        if age is None and not values.get("ageStart"):
             return None
-        elif age_end and not values.get("ageStart"):
-            return age_end
-        elif age_end is not None and values.get("ageStart") is not None and age_end < values.get("ageStart"):
+        elif age and not values.get("ageStart"):
+            return age
+        elif age is not None and values.get("ageStart") is not None and age < values.get("ageStart"):
             raise HTTPException(
                 detail="The starting age must be less than the end!",
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
             )
-        return age_end
+        return age
 
     @validator("gender")
     def valid_gender(cls, gender: str):
@@ -60,45 +55,35 @@ class QueryUser(BaseModel):
         return gender
 
     @validator("joinDateStart")
-    def valid_join_date_start(cls, join_date_start: Optional[str]):
-        if join_date_start is None:
-            return None
-        return is_iso_8601(join_date_start)
+    def valid_join_date_start(cls, join_date: str):
+        return is_iso_8601(join_date)
 
     @validator("joinDateEnd")
-    def valid_join_date_end(cls, join_date_end: str, values: Dict):
-        if join_date_end is None and not values.get("joinDateStart"):
+    def valid_join_date_end(cls, join_date: str, values: Dict):
+        join_date = is_iso_8601(join_date)
+        if join_date is None and not values.get("joinDateStart"):
             return None
-        elif join_date_end and not values.get("joinDateStart"):
-            return is_iso_8601(join_date_end)
-        else:
-            end = is_iso_8601(join_date_end)
-            if end < values["joinDateStart"]:
-                raise HTTPException(
-                    detail="The start date must be less than the end date!",
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
-                )
-            return is_iso_8601(join_date_end)
-
-    @validator("salaryStart")
-    def valid_salary_start(cls, salary_start: int):
-        if salary_start is None:
-            return None
-        return salary_start
+        elif join_date and not values.get("joinDateStart"):
+            return join_date
+        elif join_date is not None and values.get("joinDateStart") and join_date < values.get("joinDateStart"):
+            raise HTTPException(
+                detail="The start date must be less than the end date!",
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+            )
+        return join_date
 
     @validator("salaryEnd")
-    def valid_salary_end(cls, salary_end: int, values: Dict):
-        if salary_end is None and not values.get("salaryStart"):
+    def valid_salary_end(cls, salary: int, values: Dict):
+        if salary is None and not values.get("salaryStart"):
             return None
-        elif salary_end and not values.get("salaryStart"):
-            return salary_end
-        else:
-            if salary_end < values.get("salaryStart"):
-                raise HTTPException(
-                    detail="The starting salary must be less than the final salary!",
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
-                )
-            return salary_end
+        elif salary and not values.get("salaryStart"):
+            return salary
+        elif salary is not None and values.get("salaryStart") is not None and salary < values.get("salaryStart"):
+            raise HTTPException(
+                detail="The starting salary must be less than the final salary!",
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+            )
+        return salary
 
 
 class ResponseUser(BaseModel):
