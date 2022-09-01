@@ -71,6 +71,9 @@ TEST_DATA = [
 
 
 class TestDatabase(unittest.TestCase):
-    @patch("src.database.db.get_filter")
-    def test_get_filter(self, get_filter: Mock):
-        pass
+    @patch("src.database.db.collection.find")
+    def test_get_all_data(self, find: Mock):
+        find.return_value = TEST_DATA
+        result = db.get_all_data()
+        assert isinstance(result, list)
+        assert isinstance(result[0], ResponseUser)
