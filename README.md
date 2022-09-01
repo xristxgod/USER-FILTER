@@ -42,7 +42,7 @@ class QueryUser(BaseModel):
 -----
 
 
-## Settings in .env file:
+## Settings in .prod.env file:
 > `MONGODB_NAME` - Database name
 > 
 > `MONGODB_COLLECTION` - Collection name
