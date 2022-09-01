@@ -19,15 +19,15 @@ def _is_iso_8601(date: Optional[str] = None) -> Optional[datetime]:
 
 
 class QueryUser(BaseModel):
-    ageStart: Optional[int] = Field(default=None)
-    ageEnd: Optional[int] = Field(default=None)
+    ageStart: Optional[int] = Field(description="Start with", default=None)
+    ageEnd: Optional[int] = Field(description="Finish on", default=None)
     company: Optional[str] = Field(description="Company", default=None)
     gender: Optional[str] = Field(description="User gender", default=None)
     jobTitle: Optional[str] = Field(description="Job title", default=None)
-    joinDateStart: Optional[str] = Field(default=None)                      # ISO 8601
-    joinDateEnd: Optional[str] = Field(default=None)                        # ISO 8601
-    salaryStart: Optional[int] = Field(default=None)
-    salaryEnd: Optional[int] = Field(default=None)
+    joinDateStart: Optional[str] = Field(description="Start with", default=None)                      # ISO 8601
+    joinDateEnd: Optional[str] = Field(description="Finish on", default=None)                        # ISO 8601
+    salaryStart: Optional[int] = Field(description="Start with", default=None)
+    salaryEnd: Optional[int] = Field(description="Finish on", default=None)
 
     @validator("ageEnd")
     def valid_age_end(cls, age: int, values: Dict):
