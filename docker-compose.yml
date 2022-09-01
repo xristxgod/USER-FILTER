@@ -29,11 +29,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: api
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    command: uvicorn main:app --port 5000
     env_file:
       - .prod.env
     ports:
-      - "83:8000"
+      - "83:5000"
     expose:
       - 83
     networks:
