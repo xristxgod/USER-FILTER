@@ -1,4 +1,5 @@
 fastapi==0.81.0
 pydantic[email]
 pymongo==4.2.0
-uvicorn
+uvicorn==0.18.3
+python-dateutil
