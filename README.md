@@ -27,6 +27,7 @@ class QueryUser(BaseModel):
 ```
 
 
+-----
 
 
 ## Setup:
@@ -38,12 +39,18 @@ class QueryUser(BaseModel):
 > ```
 
 
+-----
+
+
 ## Settings in .env file:
 > `MONGODB_NAME` - Database name
 > 
 > `MONGODB_COLLECTION` - Collection name
 > 
 > `MONGODB_URL` - Database url
+
+
+-----
 
 
 ## How to run:
@@ -53,6 +60,9 @@ class QueryUser(BaseModel):
 > # Stop
 > docker-compose -f docker-compose.yml stop
 > ```
+
+
+-----
 
 
 ### Screenshot of the work:
