@@ -1,8 +1,12 @@
-# User filter
+<p align="center" style="font-size: 103px; font-weight:bold; color: transparent; -webkit-background-clip: text; background-clip: text; background-image: linear-gradient(90deg, red, orange, fuchsia);">
+    User filter
+</p>
+
 
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi) 
 ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
 -----
+
 
 ## Why:
 > This project clearly demonstrates the work of `FastAPI` + `MongoDB`. \
