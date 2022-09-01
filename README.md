@@ -4,9 +4,9 @@
 ## Setup:
 > ```shell
 > # SSH
-> git clone 
+> git clone git@github.com:xristxgod/USER-FILTER.git
 > # HTTPS
-> git clone 
+> git clone https://github.com/xristxgod/USER-FILTER.git
 > ```
 
 
