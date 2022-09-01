@@ -71,5 +71,5 @@ class QueryUser(BaseModel):
 -----
 
 
-### Screenshot of the work:
+## Screenshot of the work:
 ![image](https://user-images.githubusercontent.com/84931791/187871247-f20c562f-41be-4630-9683-9a71d230e30a.png)
