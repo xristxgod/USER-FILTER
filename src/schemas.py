@@ -8,7 +8,7 @@ from dateutil import parser
 from pydantic import BaseModel, Field, EmailStr, validator
 
 
-def is_iso_8601(date: Optional[str] = None) -> Optional[datetime]:
+def _is_iso_8601(date: Optional[str] = None) -> Optional[datetime]:
     """Check if a string is iso date!"""
     try:
         return parser.parse(date) if date is not None else None
@@ -56,11 +56,11 @@ class QueryUser(BaseModel):
 
     @validator("joinDateStart")
     def valid_join_date_start(cls, join_date: str):
-        return is_iso_8601(join_date)
+        return _is_iso_8601(join_date)
 
     @validator("joinDateEnd")
     def valid_join_date_end(cls, join_date: str, values: Dict):
-        join_date = is_iso_8601(join_date)
+        join_date = _is_iso_8601(join_date)
         if join_date is None and not values.get("joinDateStart"):
             return None
         elif join_date and not values.get("joinDateStart"):
