@@ -10,4 +10,4 @@ app.include_router(main_router)
 
 @app.on_event("startup")
 async def startup():
-    inserter()
+    await inserter()

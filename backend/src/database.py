@@ -18,16 +18,16 @@ class Filter:
         :param end: Finish on
         :return: Finished filter
         """
-        if start is None and end is None:
+        filters = {}
+        if start:
+            filters.update({"$gt": start - 1})
+        if end:
+            filters.update({"$lt": end + 1})
+
+        if len(filters) == 0:
             return {}
-        elif start and end is None:
-            return {name: {"$gt": start - 1}}
-        elif start is None and end:
-            return {name: {"$lt": end + 1}}
-        elif start == end:
-            return {name: start}
         else:
-            return {name: {"$gt": start - 1, "$lt": end + 1}}
+            return {name: filters}
 
     @staticmethod
     def filter_datetime(name: str, *, start: Optional[datetime] = None, end: Optional[datetime] = None) -> Dict:
@@ -39,16 +39,16 @@ class Filter:
         :return: Finished filter
         """
         sec = timedelta(microseconds=1)
-        if start is None and end is None:
+        filters = {}
+        if start:
+            filters.update({"$gt": (start - sec).isoformat()})
+        if end:
+            filters.update({"$lt": (end + sec).isoformat()})
+
+        if len(filters) == 0:
             return {}
-        elif start and end is None:
-            return {name: {"$gt": (start - sec).isoformat()}}
-        elif start is None and end:
-            return {name: {"$lt": (end + sec).isoformat()}}
-        elif start == end:
-            return {name: start}
         else:
-            return {name: {"$gt": (start - sec).isoformat(), "$lt": (end + sec).isoformat()}}
+            return {name: filters}
 
 
 class Database:
@@ -62,11 +62,11 @@ class Database:
         self.db = self.client.get_database(Config.MONGODB_NAME)
         self.collection = self.db.get_collection(Config.MONGODB_COLLECTION)
 
-    def get_all_data(self) -> List[ResponseUser]:
+    async def get_all_data(self) -> List[ResponseUser]:
         """Return all users!"""
         return [ResponseUser(**user) for user in self.collection.find({})]
 
-    def get_filter(self, query: QueryUser) -> List[ResponseUser]:
+    async def get_filter(self, query: QueryUser) -> List[ResponseUser]:
         """Search users by filters"""
         _filters = {}
 
@@ -93,7 +93,7 @@ class Database:
 
         return [ResponseUser(**user) for user in self.collection.find(_filters)]
 
-    def insert_data(self, data: List[Dict]) -> bool:
+    async def insert_data(self, data: List[Dict]) -> bool:
         """Add data to table"""
         self.collection.insert_many(data)
         return True
@@ -102,14 +102,14 @@ class Database:
 db = Database()
 
 
-def inserter():
+async def inserter():
     """Install test users in the database!"""
     import json
     import logging
-    if len(db.get_all_data()) == 0:
+    if len(await db.get_all_data()) == 0:
         with open(FILE, "r") as file:
             data = json.loads(file.read())
-        db.insert_data(data=data)
+        await db.insert_data(data=data)
         logging.info("Add test data to Database")
     return
 
