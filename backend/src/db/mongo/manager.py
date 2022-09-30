@@ -69,12 +69,6 @@ class MongoManager(Manager):
         await self.db.users.delete_one({"_id": ObjectId(user_id)})
 
 
-class FilterMongoManager(MongoManager):
-
-    def filter(self):
-        pass
-
-
 __all__ = [
     "MongoManager"
 ]
