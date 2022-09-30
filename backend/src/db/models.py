@@ -40,7 +40,7 @@ class User(BaseDBModel):
     age: int = Field(description="User age")
     company: str = Field(description="Company")
     joinDate: datetime = Field(description="Date of employment")
-    jobTitle: str = Field(description="Job title", alias="job_title")
+    jobTitle: str = Field(description="Job title")
     gender: str = Field(description="User gender")
     salary: decimal.Decimal = Field(description="Salary")
 

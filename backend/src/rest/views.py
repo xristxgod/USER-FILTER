@@ -7,7 +7,7 @@ from src.db.models import OID, User
 from src.rest.schemas import ResponseSuccessfully
 
 
-router = APIRouter(prefix="/user", tags=["USER"])
+router = APIRouter(prefix="/users", tags=["USER"])
 
 
 @router.post(
