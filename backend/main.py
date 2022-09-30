@@ -1,14 +1,24 @@
-import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.db import Manager, db
 from src.settings import get_settings
 from src.rest import views
+from config import ALLOW_CORS
+
 
 app = FastAPI(title="User project!")
 
 app.include_router(views.router, prefix="/api")
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOW_CORS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 async def add_fake_data(manager: Manager):
     """Install test users in the database!"""
