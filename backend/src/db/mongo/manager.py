@@ -2,10 +2,12 @@ import logging
 from typing import NoReturn
 from typing import List
 
+from fastapi import HTTPException, status
 import motor.motor_asyncio as mongo_async
 from bson import ObjectId
 
 import pymongo
+import pymongo.errors as mongo_ex
 from src.utils import convert_salary, convert_join_date
 from src.db import Manager
 from src.db.models import OID, User
@@ -34,7 +36,13 @@ class MongoManager(Manager):
 
     @convert_salary
     async def add_user(self, user: User) -> NoReturn:
-        await self.db.users.insert_one(user.dict(exclude={"id"}))
+        try:
+            await self.db.users.insert_one(user.dict(exclude={"id"}))
+        except mongo_ex.DuplicateKeyError:
+            raise HTTPException(
+                detail="A user with that Name: '{}' or email: '{}' already exists!".format(user.name, user.email),
+                status_code=status.HTTP_402_PAYMENT_REQUIRED
+            )
 
     @convert_join_date
     async def get_users(self) -> List[User]:
