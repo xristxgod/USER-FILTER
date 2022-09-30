@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 import unittest
 from unittest.mock import Mock, patch
 
-from src.schemas import QueryUser, ResponseUser
-from src.database import db, Filter
+from src import QueryUser, ResponseUser
+from old_project.database import db, Filter
 
 
 TEST_ALL_DATA = [

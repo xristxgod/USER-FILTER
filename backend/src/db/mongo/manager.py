@@ -3,22 +3,20 @@ from typing import NoReturn
 from typing import List
 
 from bson import ObjectId
-import motor.motor_asyncio as async_mongodb
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
 from src.db import Manager
 from src.db.models import OID, User
 
 
 class MongoManager(Manager):
-    client: async_mongodb.AsyncIOMotorClient
-    db: async_mongodb.AsyncIOMotorDatabase
 
     async def connect_to_database(self, path: str) -> NoReturn:
         logging.info("Connecting to MongoDB")
-        self.client = async_mongodb.AsyncIOMotorClient(
+        self.client = AsyncIOMotorClient(
             path,
-            maxPoolSize=10,
-            minPoolSize=10
+            # maxPoolSize=10,
+            # minPoolSize=10
         )
         self.db = self.client.main_db
         logging.info("Connected to MongoDB")

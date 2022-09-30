@@ -1,9 +1,9 @@
+import uvicorn
 from fastapi import FastAPI
 
 from src.db import db
 from src.settings import get_settings
 from src.rest import views
-
 
 app = FastAPI(title="User project!")
 
@@ -21,6 +21,5 @@ async def shutdown():
     await db.close_database_connection()
 
 
-# @app.on_event("startup")
-# async def startup():
-#     await inserter()
+if __name__ == '__main__':
+    uvicorn.run(app, port=8000)
