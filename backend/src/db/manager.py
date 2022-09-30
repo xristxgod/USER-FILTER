@@ -4,7 +4,6 @@ from abc import abstractmethod
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
-
 from .models import OID, User
 
 

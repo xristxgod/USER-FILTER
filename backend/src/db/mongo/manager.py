@@ -5,6 +5,7 @@ from typing import List
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
+from src.utils import convert_salary
 from src.db import Manager
 from src.db.models import OID, User
 
@@ -26,6 +27,7 @@ class MongoManager(Manager):
         self.client.close()
         logging.info("Closed connection with MongoDB")
 
+    @convert_salary
     async def add_user(self, user: User) -> NoReturn:
         await self.db.users.insert_one(user.dict(exclude={"id"}))
 
@@ -41,6 +43,7 @@ class MongoManager(Manager):
         if user_qs:
             return User(id=user_qs["_id"], **user_qs)
 
+    @convert_salary
     async def update_user(self, user_id: OID, user: User) -> NoReturn:
         await self.db.users.update_one(
             {"_id": ObjectId(user_id)},

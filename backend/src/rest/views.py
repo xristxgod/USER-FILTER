@@ -16,7 +16,7 @@ router = APIRouter(prefix="/users", tags=["USER"])
     response_model=ResponseSuccessfully
 )
 async def add_user(user: User, db: Manager = Depends(get_database)):
-    await db.add_user(user)
+    await db.add_user(user=user)
     return ResponseSuccessfully(successfully=True)
 
 
