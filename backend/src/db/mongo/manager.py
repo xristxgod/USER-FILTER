@@ -46,11 +46,7 @@ class MongoManager(Manager):
 
     @convert_join_date
     async def get_users(self) -> List[User]:
-        users = []
-        users_qs = self.db.users.find()
-        async for user in users_qs:
-            users.append(User(id=user["_id"], **user))
-        return users
+        return [User(id=user["_id"], **user) async for user in self.db.users.find()]
 
     @convert_join_date
     async def get_user(self, user_id: OID) -> User:
