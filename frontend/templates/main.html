@@ -8,27 +8,23 @@
 </head>
 <body>
 
-
 <div class="container">
-    <h1 class="mb-3"> User filter</h1>
-    <div class="row mb-3">
-        <div class="col-auto">
-            <input type="text" class="form-control" placeholder="New user">
+<!-- Navbar -->
+    <nav class="navbar bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand">Users</a>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
         </div>
-        <div class="col-auto">
-            <button id="addUser" class="btn btn-primary"> Add </button>
-        </div>
+    </nav>
+    <br>
 
-    </div>
 
-    <div id="user">
-        <div class="form-check">
-            <label class="form-check-label">
-                some user
-            </label>
-            <button type="button" class="btn-close"> </button>
-        </div>
-    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="users"></div>
+
+
 
 </div>
 

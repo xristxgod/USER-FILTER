@@ -11,15 +11,16 @@ window.addEventListener('DOMContentLoaded', getAllUser);
 
 
 function usersToHTML({id, name, email, age, company, joinDate, jobTitle, gender, salary}) {
-    const usersList = document.getElementById("user");
+    const usersList = document.getElementById("users");
 
     usersList.insertAdjacentHTML(
         "beforebegin", `
-        <div class="form-check" id="user${id}">
-            <label class="form-check-label">
-                ${name}
-            </label>
-            <button type="button" class="btn-close"> </button>
+        <div class="col" id="${id}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">${name}</h5>
+                </div>
+            </div>
         </div>
      `);
 }
