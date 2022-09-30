@@ -44,7 +44,3 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     await db.close_database_connection()
-
-
-if __name__ == '__main__':
-    uvicorn.run(app, port=8000)
