@@ -1,5 +1,5 @@
 import decimal
-from enum import Enum
+from enum import Enum, IntEnum
 from datetime import datetime
 from typing import Union, Optional, Dict
 
@@ -10,10 +10,28 @@ from pydantic import BaseModel, Field, validator
 NUMERIC = Union[decimal.Decimal, float, int]
 
 
+class SortMethod(IntEnum):
+    asc = 0
+    desc = 1
+
+
+class SortEnum(Enum):
+    id = "id"
+    name = "name"
+    age = "age"
+    joinDate = "joinDate"
+    salary = "salary"
+
+
 class GenderEnum(Enum):
     female = "female"
     male = "male"
     other = "other"
+
+
+class QueryUserSorted(BaseModel):
+    sortField: Optional[SortMethod] = Field(default=None, description="By which field to sort")
+    sortMethod: Optional[SortMethod] = Field(default=None, description="DESC or ASC sort")
 
 
 class QueryUserFilter(BaseModel):
@@ -68,5 +86,6 @@ class ResponseSuccessfully(BaseModel):
 
 __all__ = [
     "QueryUserFilter",
-    "ResponseSuccessfully"
+    "ResponseSuccessfully",
+    "NUMERIC"
 ]
