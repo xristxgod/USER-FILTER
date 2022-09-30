@@ -10,7 +10,18 @@ async function getAllUser() {
 window.addEventListener('DOMContentLoaded', getAllUser);
 
 
-function usersToHTML({id, name, email, age, company, joinDate, jobTitle, gender, salary}) {
+function singleUser({id, name, email, age, company, joinDate, jobTitle, gender, salary}) {
+
+    const user = document.getElementById("user")
+
+    user.insertAdjacentHTML(
+        "beforebegin",
+    )
+
+}
+
+
+function usersToHTML({id, name}) {
     const usersList = document.getElementById("users");
 
     usersList.insertAdjacentHTML(
@@ -18,7 +29,7 @@ function usersToHTML({id, name, email, age, company, joinDate, jobTitle, gender,
         <div class="col" id="${id}">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">${name}</h5>
+                    <a href=""><h5 class="card-title">${name}</h5></a>
                 </div>
             </div>
         </div>
