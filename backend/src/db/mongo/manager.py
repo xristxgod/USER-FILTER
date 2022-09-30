@@ -2,10 +2,10 @@ import logging
 from typing import NoReturn
 from typing import List
 
+import motor.motor_asyncio as mongo_async
 from bson import ObjectId
-from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
-from src.utils import convert_salary
+from src.utils import convert_salary, convert_join_date
 from src.db import Manager
 from src.db.models import OID, User
 
@@ -14,11 +14,7 @@ class MongoManager(Manager):
 
     async def connect_to_database(self, path: str) -> NoReturn:
         logging.info("Connecting to MongoDB")
-        self.client = AsyncIOMotorClient(
-            path,
-            # maxPoolSize=10,
-            # minPoolSize=10
-        )
+        self.client = mongo_async.AsyncIOMotorClient(path, maxPoolSize=10, minPoolSize=10)
         self.db = self.client.main_db
         logging.info("Connected to MongoDB")
 
@@ -31,6 +27,7 @@ class MongoManager(Manager):
     async def add_user(self, user: User) -> NoReturn:
         await self.db.users.insert_one(user.dict(exclude={"id"}))
 
+    @convert_join_date
     async def get_users(self) -> List[User]:
         users = []
         users_qs = self.db.users.find()
@@ -38,6 +35,7 @@ class MongoManager(Manager):
             users.append(User(id=user["_id"], **user))
         return users
 
+    @convert_join_date
     async def get_user(self, user_id: OID) -> User:
         user_qs = await self.db.users.find_one({"_id": ObjectId(user_id)})
         if user_qs:
@@ -52,6 +50,12 @@ class MongoManager(Manager):
 
     async def delete_user(self, user_id: OID) -> NoReturn:
         await self.db.users.delete_one({"_id": ObjectId(user_id)})
+
+
+class FilterMongoManager(MongoManager):
+
+    def filter(self):
+        pass
 
 
 __all__ = [
