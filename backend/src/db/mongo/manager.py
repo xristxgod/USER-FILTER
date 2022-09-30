@@ -35,7 +35,7 @@ class MongoManager(Manager):
         logging.info("Closed connection with MongoDB")
 
     @convert_salary
-    async def add_user(self, user: User) -> NoReturn:
+    async def add_user(self, *, user: User) -> NoReturn:
         try:
             await self.db.users.insert_one(user.dict(exclude={"id"}))
         except mongo_ex.DuplicateKeyError:
@@ -55,7 +55,7 @@ class MongoManager(Manager):
             return User(id=user_qs["_id"], **user_qs)
 
     @convert_salary
-    async def update_user(self, user_id: OID, user: User) -> NoReturn:
+    async def update_user(self, user_id: OID, *, user: User) -> NoReturn:
         await self.db.users.update_one(
             {"_id": ObjectId(user_id)},
             {"$set": user.dict(exclude={"id"})}
