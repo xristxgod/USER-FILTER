@@ -10,3 +10,8 @@ class ResponseSuccessfully(BaseModel):
                 "successfully": True
             }
         }
+
+
+__all__ = [
+    "ResponseSuccessfully"
+]

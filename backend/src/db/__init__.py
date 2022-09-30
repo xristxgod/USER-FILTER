@@ -9,6 +9,7 @@ async def get_database() -> Manager:
 
 
 __all__ = [
+    "db",
     "Manager",
     "get_database"
 ]

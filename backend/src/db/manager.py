@@ -1,9 +1,9 @@
 from typing import NoReturn
 from typing import Optional, List
-from abc import abstractproperty
+from abc import abstractmethod
 
 
-from .models import OID, UserDB
+from .models import OID, User
 
 
 class Manager:
@@ -15,25 +15,25 @@ class Manager:
     def db(self):
         raise NotImplementedError
 
-    @abstractproperty
+    @abstractmethod
     async def connect_to_database(self, path: str) -> NoReturn: ...
 
-    @abstractproperty
+    @abstractmethod
     async def close_database_connection(self) -> NoReturn: ...
 
-    @abstractproperty
-    async def add_user(self, user: UserDB) -> NoReturn: ...
+    @abstractmethod
+    async def add_user(self, user: User) -> NoReturn: ...
 
-    @abstractproperty
-    async def get_users(self) -> List[UserDB]: ...
+    @abstractmethod
+    async def get_users(self) -> List[User]: ...
 
-    @abstractproperty
-    async def get_user(self, user_id: OID) -> Optional[UserDB]: ...
+    @abstractmethod
+    async def get_user(self, user_id: OID) -> Optional[User]: ...
 
-    @abstractproperty
-    async def update_user(self, user_id: OID, user: UserDB) -> NoReturn: ...
+    @abstractmethod
+    async def update_user(self, user_id: OID, user: User) -> NoReturn: ...
 
-    @abstractproperty
+    @abstractmethod
     async def delete_user(self, user_id: OID) -> NoReturn: ...
 
 

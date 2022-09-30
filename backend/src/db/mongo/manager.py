@@ -6,7 +6,7 @@ from bson import ObjectId
 import motor.motor_asyncio as async_mongodb
 
 from src.db import Manager
-from src.db.models import OID, UserDB
+from src.db.models import OID, User
 
 
 class MongoManager(Manager):
@@ -28,22 +28,22 @@ class MongoManager(Manager):
         self.client.close()
         logging.info("Closed connection with MongoDB")
 
-    async def add_user(self, user: UserDB) -> NoReturn:
+    async def add_user(self, user: User) -> NoReturn:
         await self.db.users.insert_one(user.dict(exclude={"id"}))
 
-    async def get_users(self) -> List[UserDB]:
+    async def get_users(self) -> List[User]:
         users = []
         users_qs = self.db.users.find()
         async for user in users_qs:
-            users.append(UserDB(id=user["_id"], **user))
+            users.append(User(id=user["_id"], **user))
         return users
 
-    async def get_user(self, user_id: OID) -> UserDB:
+    async def get_user(self, user_id: OID) -> User:
         user_qs = await self.db.users.find_one({"_id": ObjectId(user_id)})
         if user_qs:
-            return UserDB(id=user_qs["_id"], **user_qs)
+            return User(id=user_qs["_id"], **user_qs)
 
-    async def update_user(self, user_id: OID, user: UserDB) -> NoReturn:
+    async def update_user(self, user_id: OID, user: User) -> NoReturn:
         await self.db.users.update_one(
             {"_id": ObjectId(user_id)},
             {"$set": user.dict(exclude={"id"})}
