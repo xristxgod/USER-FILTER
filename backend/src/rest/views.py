@@ -13,12 +13,11 @@ router = APIRouter(prefix="/users", tags=["USER"])
 
 @router.get(
     "/filter",
-    # response_model=List[User],
+    response_model=List[User],
     description="Get filtered and sorted data data!"
 )
 async def user_filter(query=Depends(QueryUserFilter), db: Manager = Depends(get_database)):
-    FilterManager(query=query, manager=db).filter()
-    return query
+    return await FilterManager(query=query, manager=db).filter()
 
 
 @router.post(

@@ -1,9 +1,18 @@
+from datetime import datetime
+from dataclasses import dataclass, field
 from typing import NoReturn
-from typing import List
+from typing import Union, Optional, List
 
 from src.db import Manager
 from src.db.models import User
-from src.rest.schemas import QueryUserFilter
+from src.rest.schemas import NUMERIC, QueryUserFilter
+
+
+@dataclass()
+class FilterData:
+    name: str
+    start: Optional[Union[NUMERIC, datetime]] = field(default=None)
+    end: Optional[Union[NUMERIC, datetime]] = field(default=None)
 
 
 class FilterManager:
@@ -13,47 +22,36 @@ class FilterManager:
         self.query = query
 
         self.params = {}
+        self._set()
 
     def _set_base_filter(self) -> NoReturn:
-        self.params.update({
-            "company": self.query.company,
-            "gender": self.query.gender,
-            "jobTitle": self.query.jobTitle
-        })
+        if self.query.company:
+            self.params.update({"company": self.query.company})
+        if self.query.gender:
+            self.params.update({"gender": self.query.gender})
+        if self.query.jobTitle:
+            self.params.update({"jobTitle": self.query.jobTitle})
 
-    def _set_age_filter(self) -> NoReturn:
-        self.params.update({
-            "age": {
-                "$gt": self.query.ageStart,
-                "$lt": self.query.ageEnd
-            }
-        })
-
-    def _set_join_date_filter(self) -> NoReturn:
-        self.params.update({
-            "joinDate": {
-                "$gte": self.query.joinDateStart,
-                "$lt": self.query.joinDateEnd
-            }
-        })
-
-    def _set_salary_filter(self) -> NoReturn:
-        self.params.update({
-            "salary": {
-                "$gt": self.query.salaryStart,
-                "$lt": self.query.salaryEnd
-            }
-        })
+    def _set_filter(self, data: FilterData) -> NoReturn:
+        params = {}
+        if data.start:
+            params.update({"$gte": data.start})
+        if data.end:
+            params.update({"$lte": data.end})
+        if params:
+            self.params.update({data.name: params})
 
     def _set(self) -> NoReturn:
         self._set_base_filter()
-        self._set_age_filter()
-        self._set_join_date_filter()
-        self._set_salary_filter()
+        self._set_filter(FilterData(name="age", start=self.query.ageStart, end=self.query.ageEnd))
+        self._set_filter(FilterData(name="joinDate", start=self.query.joinDateStart, end=self.query.joinDateEnd))
+        self._set_filter(FilterData(name="salary", start=self.query.salaryStart, end=self.query.salaryEnd))
 
-    def filter(self) -> List[User]:
-        self._set()
-        print(self.params)
+    async def filter(self) -> List[User]:
+        return [
+            User(id=user["_id"], **user)
+            async for user in self.manager.db.users.find(self.params)
+        ]
 
 
 __all__ = [
