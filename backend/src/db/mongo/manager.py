@@ -5,6 +5,7 @@ from typing import List
 import motor.motor_asyncio as mongo_async
 from bson import ObjectId
 
+import pymongo
 from src.utils import convert_salary, convert_join_date
 from src.db import Manager
 from src.db.models import OID, User
@@ -12,10 +13,18 @@ from src.db.models import OID, User
 
 class MongoManager(Manager):
 
+    async def set_index(self) -> NoReturn:
+        logging.info("Set index")
+        await self.db.users.create_index(
+            [("email", pymongo.DESCENDING), ("name", pymongo.ASCENDING)],
+            unique=True
+        )
+
     async def connect_to_database(self, path: str) -> NoReturn:
         logging.info("Connecting to MongoDB")
         self.client = mongo_async.AsyncIOMotorClient(path, maxPoolSize=10, minPoolSize=10)
         self.db = self.client.main_db
+        await self.set_index()
         logging.info("Connected to MongoDB")
 
     async def close_database_connection(self) -> NoReturn:
