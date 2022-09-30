@@ -5,7 +5,8 @@ from typing import Union, Optional, List
 
 from src.db import Manager
 from src.db.models import User
-from src.rest.schemas import NUMERIC, QueryUserFilter
+from src.rest.schemas import NUMERIC
+from src.rest.schemas import QueryUserFilter
 
 
 @dataclass()
