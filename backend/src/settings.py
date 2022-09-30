@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     db_path: str
 
     class Config:
-        env_file = ".env"
+        env_file = ".prod.env"
 
 
 @lru_cache()
