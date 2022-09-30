@@ -11,7 +11,6 @@ app = FastAPI(title="User project!")
 
 app.include_router(views.router, prefix="/api")
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOW_CORS,
