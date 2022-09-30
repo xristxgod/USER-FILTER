@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 
 from src.db import Manager, get_database
 from src.db.models import OID, User
+from src.db.filters import FilterManager
 from src.rest.schemas import QueryUserFilter, ResponseSuccessfully
 
 
@@ -12,10 +13,11 @@ router = APIRouter(prefix="/users", tags=["USER"])
 
 @router.get(
     "/filter",
-    response_model=List[User],
+    # response_model=List[User],
     description="Get filtered and sorted data data!"
 )
 async def user_filter(query=Depends(QueryUserFilter), db: Manager = Depends(get_database)):
+    FilterManager(query=query, manager=db).filter()
     return query
 
 
