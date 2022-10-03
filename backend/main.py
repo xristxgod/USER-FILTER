@@ -19,6 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 async def add_fake_data(manager: Manager):
     """Install test users in the database!"""
     import os
