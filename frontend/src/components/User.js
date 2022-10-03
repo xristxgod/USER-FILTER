@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 
 function UserItem(props) {
-    const deleteUserHandler = (name) => {
+    const deleteUserHandler = (id) => {
         axios.delete("http://web-app.com/api/users/${id}")
             .then(res => console.log(res.data))
     };

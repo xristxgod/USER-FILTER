@@ -1,7 +1,7 @@
 import UserItem from "./User";
 
 
-function UserView(props) {
+export default function UserView(props) {
     return (
         <div>
             <ul>
@@ -10,5 +10,3 @@ function UserView(props) {
         </div>
     )
 }
-
-export default UserView;
