@@ -47,6 +47,7 @@ class User(BaseDBModel):
     class Config:
         schema_extra = {
             "example": {
+                "id": "6336dc765c423124e532c41d",
                 "name": "Flynn Vang",
                 "email": "turpis.non@Nunc.edu",
                 "age": 69,
