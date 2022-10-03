@@ -1,5 +1,19 @@
-# Backend
+# Backend:
 
+### User data:
+> ```json
+> {
+>   "id": "6336dc765c423124e532c41d",
+>   "name": "Flynn Vang",
+>   "email": "turpis.non@Nunc.edu",
+>   "age": 69,
+>   "company": "Twitter",
+>   "joinDate": "2003-12-28T18:18:10-08:00",
+>   "jobTitle": "janitor",
+>   "gender": "female",
+>   "salary": 9632
+> }
+> ```
 
 
 ### Screenshot:
